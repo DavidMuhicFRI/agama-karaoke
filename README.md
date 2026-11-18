@@ -4,7 +4,7 @@ Full-screen, synced lyrics over the AGAMA Car Launcher on an Android head unit.
 
 - Follows whatever is playing (Spotify etc.) through Android media sessions
 - Synced lyrics from [LRCLIB](https://lrclib.net), cached on the device for offline replay
-- Hides itself while the car is moving (GPS speed gate), optional auto-show when stopped
+- Optional: hide while moving (GPS speed gate, off by default) and auto-show when stopped
 
 ## Install
 

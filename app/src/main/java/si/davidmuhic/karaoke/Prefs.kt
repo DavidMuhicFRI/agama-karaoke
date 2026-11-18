@@ -9,7 +9,7 @@ class Prefs(context: Context) {
 
     /** Hide lyrics while the car is moving. */
     var speedGate: Boolean
-        get() = sp.getBoolean("speed_gate", true)
+        get() = sp.getBoolean("speed_gate", false)
         set(value) = sp.edit().putBoolean("speed_gate", value).apply()
 
     /** Pop the lyrics up automatically whenever the car stops with music playing. */
