@@ -4,7 +4,6 @@ plugins {
 }
 
 val buildNumber = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
-val keystorePath: String? = System.getenv("KEYSTORE_PATH")
 
 android {
     namespace = "si.davidmuhic.karaoke"
@@ -19,21 +18,20 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            if (keystorePath != null) {
-                storeFile = file(keystorePath)
-                storePassword = System.getenv("KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("KEY_ALIAS")
-                keyPassword = System.getenv("KEY_PASSWORD")
-            }
+        // Committed debug key (standard "android" passwords, not a secret) so every CI build
+        // has the same signature and installs as an update over the previous one.
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
         }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            // A stable key lets new builds install over old ones; falls back to debug signing locally.
-            signingConfig = signingConfigs.getByName(if (keystorePath != null) "release" else "debug")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
