@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FF6B4A"
+        android:pathData="M54,4a50,50 0,1 1,0 100a50,50 0,1 1,0 -100z" />
+    <!-- microphone head -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,24a12,12 0,0 1,12 12v14a12,12 0,0 1,-24 0v-14a12,12 0,0 1,12 -12z" />
+    <!-- holder arc -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M36,48c0,10 8,18 18,18s18,-8 18,-18" />
+    <!-- stand -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M54,66v14M42,82h24" />
+</vector>
