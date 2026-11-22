@@ -27,14 +27,11 @@ jobs:
         continue-on-error: true
         run: |
           UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
-          Q="Welcome to the DCC Nothing But Thieves"
-          probe() { echo "::notice title=$1::$(echo "$2" | head -c 350 | tr '\n' ' ')"; }
-          probe get "$(curl -s -G -A "$UA" -e https://music.163.com/ --data-urlencode "s=$Q" -d type=1 -d limit=2 https://music.163.com/api/search/get)"
-          probe cloudsearch "$(curl -s -G -A "$UA" -e https://music.163.com/ --data-urlencode "s=$Q" -d type=1 -d limit=2 https://music.163.com/api/cloudsearch/pc)"
-          probe pc-post "$(curl -s -A "$UA" -e https://music.163.com/ --data-urlencode "s=$Q" -d type=1 -d limit=2 -d offset=0 https://music.163.com/api/search/pc)"
-          probe web-post "$(curl -s -A "$UA" -e https://music.163.com/ --data-urlencode "s=$Q" -d type=1 -d limit=2 -d offset=0 https://music.163.com/api/search/get/web)"
-          probe web-cookie "$(curl -s -G -A "$UA" -e https://music.163.com/ -b "appver=2.0.2; os=pc" --data-urlencode "s=$Q" -d type=1 -d limit=2 https://music.163.com/api/search/get/web)"
-          probe lyric "$(curl -s -A "$UA" -e https://music.163.com/ 'https://music.163.com/api/song/lyric?id=1901371647&lv=1&kv=1&tv=-1')"
+          S=$(curl -s -G -A "$UA" -e https://music.163.com/ --data-urlencode "s=Welcome to the DCC Nothing But Thieves" -d type=1 -d limit=5 -d offset=0 https://music.163.com/api/search/get)
+          echo "::notice title=songs::$(echo "$S" | jq -c '[.result.songs[] | {id, name, a: [.artists[].name], duration}]' | head -c 700)"
+          ID=$(echo "$S" | jq -r '[.result.songs[] | select(.artists[].name == "Nothing But Thieves")][0].id')
+          L=$(curl -s -A "$UA" -e https://music.163.com/ "https://music.163.com/api/song/lyric?id=$ID&lv=1&kv=1&tv=-1")
+          echo "::notice title=lyric $ID::$(echo "$L" | jq -r '.lrc.lyric' | head -c 500 | tr '\n' '|')"
 
       - name: Build
         run: |

@@ -24,7 +24,7 @@ class NetEaseSource : LyricSource {
 
     /** Best search hit whose title matches, preferring the same artist and a similar duration. */
     private fun searchSong(artist: String, title: String, track: Track): Long? {
-        val url = "$BASE/api/search/get/web?" + Http.query("s" to "$title $artist", "type" to "1", "limit" to "15", "offset" to "0")
+        val url = "$BASE/api/search/get?" + Http.query("s" to "$title $artist", "type" to "1", "limit" to "15", "offset" to "0")
         val (code, body) = Http.get(url, HEADERS)
         if (code != 200) throw IOException("NetEase search returned $code")
         val songs = JSONObject(body).optJSONObject("result")?.optJSONArray("songs") ?: return null
@@ -79,9 +79,12 @@ class NetEaseSource : LyricSource {
             "Referer" to "https://music.163.com/",
         )
 
-        /** Credit lines NetEase prepends, e.g. "[00:00.00] 作词 : Conor Mason". */
+        /**
+         * Credit lines NetEase prepends, e.g. "[00:00.00] 作词 : Conor Mason" or "[00:02.31] 人声录音 : …":
+         * a short Chinese label or a known English role, followed by a colon.
+         */
         val creditLine = Regex(
-            """]\s*(作词|作曲|编曲|制作人|制作|监制|混音|母带|和声|吉他|贝斯|鼓|弦乐|录音|出品|发行|OP|SP|Lyricist|Lyrics by|Composer|Composed by|Arranger|Arranged by|Producer|Produced by|Written by|Mixed by|Mastered by)\s*[:：]""",
+            """]\s*([\u3400-\u9FFF]{1,8}|OP|SP|Lyricist|Lyrics by|Lyrics|Composer|Composed by|Arranger|Arranged by|Producer|Produced by|Written by|Mixed by|Mastered by)\s*[:：]""",
             RegexOption.IGNORE_CASE,
         )
         val instrumentalMarker = Regex("纯音乐")
