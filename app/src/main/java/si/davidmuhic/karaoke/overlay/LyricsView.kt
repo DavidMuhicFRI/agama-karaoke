@@ -46,8 +46,8 @@ class LyricsView(context: Context) : View(context) {
         color = Color.WHITE
     }
     private val headerPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xB3FFFFFF.toInt()
-        textSize = 18 * density
+        color = 0xD9FFFFFF.toInt()
+        typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
         textAlign = Paint.Align.CENTER
     }
     private val hintPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -55,6 +55,7 @@ class LyricsView(context: Context) : View(context) {
         textSize = 13 * density
         textAlign = Paint.Align.CENTER
     }
+    private val headerBackgroundPaint = Paint().apply { color = BACKGROUND }
     private val barTrackPaint = Paint().apply { color = 0x33FFFFFF }
     private val barFillPaint = Paint().apply { color = ACCENT }
 
@@ -87,6 +88,8 @@ class LyricsView(context: Context) : View(context) {
         if (textWidth <= 0) return
         lyricPaint.textSize = (min(height * 0.085f, width * 0.055f) * fontScale).coerceAtLeast(14 * density)
         gap = lyricPaint.textSize * 0.55f
+        // Title scales with the screen, roughly 60% of the lyric size.
+        headerPaint.textSize = max(26 * density, lyricPaint.textSize * 0.6f)
 
         val c = content
         val texts: List<String> = when (c) {
@@ -198,7 +201,10 @@ class LyricsView(context: Context) : View(context) {
         if (header.isNotEmpty()) {
             val maxWidth = width - 2f * horizontalPadding()
             val text = TextUtils.ellipsize(header, headerPaint, maxWidth, TextUtils.TruncateAt.END).toString()
-            canvas.drawText(text, width / 2f, 36 * density, headerPaint)
+            val baseline = 16 * density - headerPaint.ascent()
+            // Solid strip so scrolled lyrics don't run underneath the title.
+            canvas.drawRect(0f, 0f, width.toFloat(), baseline + headerPaint.descent() + 10 * density, headerBackgroundPaint)
+            canvas.drawText(text, width / 2f, baseline, headerPaint)
         }
         if (durationMs > 0) {
             val barY = height - 34 * density
