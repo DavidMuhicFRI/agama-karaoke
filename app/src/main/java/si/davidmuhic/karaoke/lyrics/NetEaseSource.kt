@@ -46,7 +46,7 @@ class NetEaseSource : LyricSource {
                 val a = normalized(artists.getJSONObject(j).optString("name"))
                 a.isNotEmpty() && (a.contains(wantedArtist) || wantedArtist.contains(a))
             }
-            val score = durationDiffSec + if (artistMatches) 0 else ARTIST_MISMATCH_PENALTY
+            val score = durationDiffSec + if (artistMatches) 0.0 else ARTIST_MISMATCH_PENALTY
             if (score < bestScore) {
                 bestScore = score
                 bestId = song.optLong("id")
