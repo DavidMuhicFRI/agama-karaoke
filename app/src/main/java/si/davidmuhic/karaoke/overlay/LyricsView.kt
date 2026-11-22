@@ -208,7 +208,13 @@ class LyricsView(context: Context) : View(context) {
             canvas.drawRect(left, barY, right, barY + 3 * density, barTrackPaint)
             canvas.drawRect(left, barY, left + (right - left) * progress, barY + 3 * density, barFillPaint)
         }
-        canvas.drawText("tap to close", width / 2f, height - 12 * density, hintPaint)
+        val source = when (val c = content) {
+            is Lyrics.Synced -> c.source
+            is Lyrics.Plain -> c.source
+            else -> ""
+        }
+        val hint = if (source.isEmpty()) "tap to close" else "tap to close  ·  lyrics from $source"
+        canvas.drawText(hint, width / 2f, height - 12 * density, hintPaint)
     }
 
     /** Index of the last line whose timestamp has passed, or -1 before the first line. */

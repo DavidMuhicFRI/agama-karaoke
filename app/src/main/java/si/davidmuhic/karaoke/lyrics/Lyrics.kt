@@ -22,7 +22,7 @@ sealed class Lyrics {
     object Loading : Lyrics()
     object NotFound : Lyrics()
     object Instrumental : Lyrics()
-    data class Synced(val lines: List<LyricLine>) : Lyrics()
-    data class Plain(val lines: List<String>) : Lyrics()
+    data class Synced(val lines: List<LyricLine>, val source: String) : Lyrics()
+    data class Plain(val lines: List<String>, val source: String) : Lyrics()
     data class Error(val message: String) : Lyrics()
 }
